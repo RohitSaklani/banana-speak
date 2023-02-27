@@ -7,28 +7,24 @@ var out = document.querySelector("#output");
 btntrans.addEventListener("click", newFunction());
 
 function err() {
-    console.log("eroor occured during api tran");
-    out.innerHTML = "error occured during api transaction !!!"
+  out.innerHTML = "error occured during api transaction !!!";
 }
 
 function newFunction() {
-    return function clickenevthandler() {
-        var url = "https://api.funtranslations.com/translate/minion.json?text=";
-        url = url + bstxt.value;
-        let cntxt;
+  return async function clickenevthandler() {
+    var url = "https://api.funtranslations.com/translate/minion.json?text=";
+    url = url + bstxt.value;
+    let cntxt;
 
-        console.log("clcikedd");
-        console.log("given input : " + bstxt.value);
+    try {
+      const res = await fetch(url)
+        .then((response) => response.json())
+        .catch(() => err());
 
-        fetch(url)
-            .then(response => { return response.json(); })
-            .then(json => {
-                console.log(json.contents.translated);
-                cntxt = json.contents.translated;
-                out.innerHTML = cntxt;
-            })
-            .catch(err());
-
-
-    };
+      cntxt = res.contents.translated;
+      out.innerHTML = cntxt;
+    } catch (error) {
+      err();
+    }
+  };
 }
